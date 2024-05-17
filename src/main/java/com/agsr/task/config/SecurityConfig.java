@@ -21,15 +21,17 @@ import java.util.stream.Stream;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private static final String API_PATIENTS = "/api/patients/**";
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/patients/**").hasAnyRole(Roles.PRACTITIONER.name(), Roles.PATIENT.name())
+                        .requestMatchers(HttpMethod.GET, API_PATIENTS).hasAnyRole(Roles.PRACTITIONER.name(), Roles.PATIENT.name())
                         .requestMatchers(HttpMethod.POST, "/api/patients").hasRole(Roles.PRACTITIONER.name())
-                        .requestMatchers(HttpMethod.PUT, "/api/patients/**").hasRole(Roles.PRACTITIONER.name())
-                        .requestMatchers(HttpMethod.DELETE, "/api/patients/**").hasRole(Roles.PRACTITIONER.name())
+                        .requestMatchers(HttpMethod.PUT, API_PATIENTS).hasRole(Roles.PRACTITIONER.name())
+                        .requestMatchers(HttpMethod.DELETE, API_PATIENTS).hasRole(Roles.PRACTITIONER.name())
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
