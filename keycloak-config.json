@@ -1,0 +1,99 @@
+{
+  "id": "agsr",
+  "realm": "agsr",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "springsecurity",
+      "secret": "O9JNnP0Irzf5qhEB70Lq1SttANgFr4N5",
+      "enabled": true,
+      "redirectUris": ["http://localhost:8081/*"],
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "serviceAccountsEnabled": true,
+      "authorizationServicesEnabled": true,
+      "webOrigins": ["*"],
+      "protocolMappers": [
+        {
+          "name": "realm-access",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": true,
+            "claim.name": "realm_access.roles",
+            "jsonType.label": "String",
+            "userinfo.token.claim": true,
+            "id.token.claim": true,
+            "access.token.claim": true
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "practitioner",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "practitioner",
+      "lastName": "practitioner",
+      "email": "practitioner@example.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin"
+        }
+      ],
+      "realmRoles": ["ROLE_PRACTITIONER"]
+    },
+    {
+      "username": "patient",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "patient",
+      "lastName": "patient",
+      "email": "patient@example.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin"
+        }
+      ],
+      "realmRoles": ["ROLE_PATIENT"]
+    },
+    {
+      "username": "test",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "test",
+      "lastName": "test",
+      "email": "test@example.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin"
+        }
+      ],
+      "realmRoles": ["ROLE_PATIENT", "ROLE_PRACTITIONER"]
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "ROLE_PRACTITIONER",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "agsr"
+      },
+      {
+        "name": "ROLE_PATIENT",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "agsr"
+      }
+    ]
+  }
+}
