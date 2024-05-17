@@ -1,5 +1,6 @@
 package com.agsr.task.config;
 
+import com.agsr.task.entity.Roles;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,13 +23,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-         http
+        http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/patients/**").hasAnyRole("PRACTITIONER", "PATIENT")
-                        .requestMatchers(HttpMethod.POST, "/api/patients").hasRole("PRACTITIONER")
-                        .requestMatchers(HttpMethod.PUT, "/api/patients/**").hasRole("PRACTITIONER")
-                        .requestMatchers(HttpMethod.DELETE, "/api/patients/**").hasRole("PRACTITIONER")
+                        .requestMatchers(HttpMethod.GET, "/api/patients/**").hasAnyRole(Roles.PRACTITIONER.name(), Roles.PATIENT.name())
+                        .requestMatchers(HttpMethod.POST, "/api/patients").hasRole(Roles.PRACTITIONER.name())
+                        .requestMatchers(HttpMethod.PUT, "/api/patients/**").hasRole(Roles.PRACTITIONER.name())
+                        .requestMatchers(HttpMethod.DELETE, "/api/patients/**").hasRole(Roles.PRACTITIONER.name())
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
@@ -43,16 +44,16 @@ public class SecurityConfig {
         var jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         converter.setPrincipalClaimName("preferred_username");
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-           var authorities = jwtGrantedAuthoritiesConverter.convert(jwt);
-           var roles = (List<String>) jwt.getClaimAsMap("realm_access").get("roles");
+            var authorities = jwtGrantedAuthoritiesConverter.convert(jwt);
+            var roles = (List<String>) jwt.getClaimAsMap("realm_access").get("roles");
 
-           return Stream.concat(authorities.stream(), roles.stream()
-                   .filter(role -> role.startsWith("ROLE_"))
-                   .map(SimpleGrantedAuthority::new))
-                   .map(GrantedAuthority.class::cast)
-                   .toList();
-       });
-       return converter;
+            return Stream.concat(authorities.stream(), roles.stream()
+                            .filter(role -> role.startsWith("ROLE_"))
+                            .map(SimpleGrantedAuthority::new))
+                    .map(GrantedAuthority.class::cast)
+                    .toList();
+        });
+        return converter;
     }
 }
 
