@@ -3,25 +3,38 @@ Execute this command is CMD: docker-compose up --build
 
 To test:
 Call the following endoint to get access JWT token
+
 http://localhost:8080/realms/agsr/protocol/openid-connect/token
+
 Use following args in body:
 ![image](https://github.com/MordasKirill/agsr/assets/46963005/c4bd6ec0-5a78-47a0-8366-3e762505ac05)
+
 client_id:springsecurity
+
 username:test (Root user, has Patient and Pracririoner roles, also patient (patient role) and practitioner(practitioner role) users can be user)
+
 password:admin
+
 grant_type:password
+
 client_secret:O9JNnP0Irzf5qhEB70Lq1SttANgFr4N5
 
 Last step is to call any endpoint, using Authorization
+
 For example:GET http://localhost:8081/agsr/api/patients
+
 ![image](https://github.com/MordasKirill/agsr/assets/46963005/ef84db78-88c8-48fe-aec5-785eac04c35b)
 
 Expected result codes: 200 - Success; 401 - Incorrect token; 403 - Not enought roles to access endpoint
 
 Other endpoints:
+
 GET http://localhost:8081/agsr/api/patients/{id}
+
 POST http://localhost:8081/agsr/api/patients
+
 DELETE http://localhost:8081/agsr/api/patients/{id}
+
 PUT http://localhost:8081/agsr/api/patients/{id}
 
 
